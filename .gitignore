@@ -1,0 +1,50 @@
+## --- .NET / C# ---
+bin/
+obj/
+TestResults/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Entity Framework & SQL Server
+*.mdf
+*.ldf
+*.db
+App_Data/
+
+## --- Node / React ---
+node_modules/
+dist/
+build/
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+## --- Environment & Secrets ---
+.env
+.env.local
+.env.*.local
+*.usersecrets
+appsettings.Development.json
+# Note: Keep appsettings.json for structure, but hide secrets.
+
+## --- Infrastructure & Tools ---
+.azure/
+.terraform/
+*.log
+docker-compose.override.yml
+
+## --- OS Specific ---
+.DS_Store
+Thumbs.db
