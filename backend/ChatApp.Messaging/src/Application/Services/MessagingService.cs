@@ -74,7 +74,7 @@ public class MessagingService : IMessagingService
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var messageEvent = new MessageSentEvent(conversationId, currentUserId, content, message.SentAt);
+        var messageEvent = new MessageSentEvent(message.Id, conversationId, currentUserId, content, message.SentAt);
         await _messageBroker.PublishAsync("chatapp.updates", messageEvent, cancellationToken);
 
         return _mapper.Map<MessageResponse>(message);
