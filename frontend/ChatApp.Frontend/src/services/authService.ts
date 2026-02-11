@@ -11,33 +11,59 @@ export interface RegisterRequest {
   password: string;
 }
 
+// 1. Define what the Backend ACTUALLY returns (The Source)
+interface BackendAuthResponse {
+  id: string;
+  token: string;
+  username: string;
+  expiresAt: string;
+}
+
+// 2. Define what the Frontend NEEDS (The Destination)
+// We removed 'email' because the backend doesn't send it.
 export interface AuthResponse {
   user: {
-    id: number;
+    id: string;
     username: string;
-    email: string;
   };
   token: string;
 }
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {
-    const response = await authAxios.post<AuthResponse>(
+    // Fetch raw data from backend
+    const response = await authAxios.post<BackendAuthResponse>(
       API_ROUTES.AUTH.LOGIN,
       credentials,
     );
-    return response.data;
+
+    // Map Backend response -> Frontend State
+    return {
+      token: response.data.token,
+      user: {
+        id: response.data.id,
+        username: response.data.username,
+      },
+    };
   },
 
   register: async (userData: RegisterRequest): Promise<AuthResponse> => {
-    const response = await authAxios.post<AuthResponse>(
+    const response = await authAxios.post<BackendAuthResponse>(
       API_ROUTES.AUTH.REGISTER,
       userData,
     );
-    return response.data;
+
+    return {
+      token: response.data.token,
+      user: {
+        id: response.data.id,
+        username: response.data.username,
+      },
+    };
   },
 
   logout: async (): Promise<void> => {
+    // We just call the endpoint, no mapping needed
     await authAxios.post(API_ROUTES.AUTH.LOGOUT);
   },
 };

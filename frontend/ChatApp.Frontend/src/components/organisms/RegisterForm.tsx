@@ -109,7 +109,7 @@ export const RegisterForm: React.FC = () => {
         Already have an account?{" "}
         <a
           href={APP_ROUTES.LOGIN}
-          className="text-primary-600 hover:text-primary-700 font-medium"
+          className="text-blue-600 hover:text-blue-700 font-medium"
         >
           Login
         </a>

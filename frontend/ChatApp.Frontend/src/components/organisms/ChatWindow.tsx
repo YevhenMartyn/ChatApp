@@ -36,7 +36,7 @@ export const ChatWindow: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const loadMessages = async (conversationId: number) => {
+  const loadMessages = async (conversationId: string) => {
     dispatch(setLoadingMessages(true));
     try {
       const data = await chatService.getMessages(conversationId);
@@ -98,8 +98,7 @@ export const ChatWindow: React.FC = () => {
                 key={message.id}
                 content={message.content}
                 isMine={message.senderId === user?.id}
-                senderName={message.senderName}
-                timestamp={message.timestamp}
+                sentAt={message.sentAt}
               />
             ))}
             <div ref={messagesEndRef} />

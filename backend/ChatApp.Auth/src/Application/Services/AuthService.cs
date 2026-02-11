@@ -50,6 +50,7 @@ public class AuthService : IAuthService
         var token = await _jwtTokenGenerator.GenerateTokenAsync(user);
 
         return new AuthResponse(
+            user.Id,
             token,
             user.UserName!,
             DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationInMinutes)
@@ -73,6 +74,7 @@ public class AuthService : IAuthService
         var token = await _jwtTokenGenerator.GenerateTokenAsync(user);
 
         return new AuthResponse(
+            user.Id,
             token,
             user.UserName!,
             DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationInMinutes)

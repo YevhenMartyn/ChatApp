@@ -22,18 +22,19 @@ export const ChatPage: React.FC = () => {
   return (
     <div className="h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="bg-primary-600 text-white p-4 shadow-md">
+      <nav className="bg-blue-600 text-white p-4 shadow-md">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">ChatApp</h1>
+          <h1 className="text-xl font-bold text-white">ChatApp</h1>
           <div className="flex items-center space-x-4">
-            <span className="text-sm">Welcome, {user?.username}</span>
-            <Button
-              variant="ghost"
+            <span className="text-sm text-white">
+              Welcome, {user?.username}
+            </span>
+            <button
               onClick={handleLogout}
-              className="text-white hover:bg-primary-700"
+              className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-medium transition-colors"
             >
               Logout
-            </Button>
+            </button>
           </div>
         </div>
       </nav>

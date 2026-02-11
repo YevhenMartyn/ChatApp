@@ -14,10 +14,9 @@ export const API_ROUTES = {
   },
   CHAT: {
     CONVERSATIONS: "/api/conversations",
-    MESSAGES: (conversationId: number) =>
-      `/api/conversations/${conversationId}/messages`,
-    SEND_MESSAGE: (conversationId: number) =>
-      `/api/conversations/${conversationId}/messages`,
+    MESSAGES: (conversationId: string) =>
+      `/api/messages/conversation/${conversationId}`,
+    SEND_MESSAGE: "/api/messages",
   },
 };
 
@@ -28,4 +27,4 @@ export const APP_ROUTES = {
   ROOT: "/",
 };
 
-export const SIGNALR_HUB_URL = `${REALTIME_BASE_URL}/chatHub`;
+export const SIGNALR_HUB_URL = `${REALTIME_BASE_URL}/hubs/chat`;

@@ -18,6 +18,8 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   const getInitials = (name: string) => {
+    if (!name) return "?";
+
     const parts = name.trim().split(" ");
     if (parts.length >= 2) {
       return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
@@ -26,10 +28,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <div
-      className={`${sizeStyles[size]} rounded-full bg-primary-500 text-white flex items-center justify-center font-medium ${className}`}
-    >
-      {getInitials(name)}
-    </div>
+    <div className={`${sizeStyles[size]} ...`}>{getInitials(name || "?")}</div>
   );
 };

@@ -29,7 +29,7 @@ export const ConversationList: React.FC = () => {
     }
   };
 
-  const handleSelectConversation = (conversationId: number) => {
+  const handleSelectConversation = (conversationId: string) => {
     dispatch(setActiveConversation(conversationId));
   };
 
@@ -54,26 +54,21 @@ export const ConversationList: React.FC = () => {
               key={conversation.id}
               onClick={() => handleSelectConversation(conversation.id)}
               className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
-                activeConversationId === conversation.id ? "bg-primary-50" : ""
+                activeConversationId === conversation.id ? "bg-blue-100" : ""
               }`}
             >
               <div className="flex items-center space-x-3">
-                <Avatar name={conversation.name} />
+                <Avatar name={conversation.name || "Chat"} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {conversation.name}
+                    {conversation.name || "New Chat"}
                   </p>
-                  {conversation.lastMessage && (
+                  {conversation.lastMessage?.content && (
                     <p className="text-sm text-gray-500 truncate">
-                      {conversation.lastMessage}
+                      {conversation.lastMessage.content}
                     </p>
                   )}
                 </div>
-                {conversation.unreadCount && conversation.unreadCount > 0 && (
-                  <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-primary-600 rounded-full">
-                    {conversation.unreadCount}
-                  </span>
-                )}
               </div>
             </div>
           ))}

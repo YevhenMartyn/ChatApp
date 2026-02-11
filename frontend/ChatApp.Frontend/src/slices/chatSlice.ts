@@ -1,28 +1,31 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+// Backend Message contract
 export interface Message {
-  id: number;
-  conversationId: number;
-  senderId: number;
-  senderName?: string;
+  id: string;
+  conversationId: string;
+  senderId: string;
   content: string;
-  timestamp: string;
-  isRead: boolean;
+  sentAt: string;
 }
 
+// Backend Conversation contract
 export interface Conversation {
-  id: number;
-  name: string;
-  lastMessage?: string;
-  lastMessageTime?: string;
-  unreadCount?: number;
-  participantNames?: string[];
+  id: string;
+  name?: string; // Generated on frontend from participantIds
+  createdAt: string;
+  lastMessageAt?: string;
+  participantIds: string[];
+  lastMessage?: {
+    content: string;
+    sentAt: string;
+  };
 }
 
 interface ChatState {
   conversations: Conversation[];
-  activeConversationId: number | null;
-  messages: { [conversationId: number]: Message[] };
+  activeConversationId: string | null;
+  messages: { [conversationId: string]: Message[] };
   isLoadingConversations: boolean;
   isLoadingMessages: boolean;
   error: string | null;
@@ -45,12 +48,12 @@ const chatSlice = createSlice({
       state.conversations = action.payload;
       state.isLoadingConversations = false;
     },
-    setActiveConversation: (state, action: PayloadAction<number>) => {
+    setActiveConversation: (state, action: PayloadAction<string>) => {
       state.activeConversationId = action.payload;
     },
     setMessages: (
       state,
-      action: PayloadAction<{ conversationId: number; messages: Message[] }>,
+      action: PayloadAction<{ conversationId: string; messages: Message[] }>,
     ) => {
       state.messages[action.payload.conversationId] = action.payload.messages;
       state.isLoadingMessages = false;

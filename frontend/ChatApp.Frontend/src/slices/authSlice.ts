@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-  id: number;
+// 1. Updated User interface (String ID, No Email)
+export interface User {
+  id: string;
   username: string;
-  email: string;
 }
 
 interface AuthState {
@@ -14,8 +14,22 @@ interface AuthState {
   error: string | null;
 }
 
+// 2. Helper to safely load user from localStorage
+const getUserFromStorage = (): User | null => {
+  try {
+    const userStr = localStorage.getItem("user");
+    if (userStr && userStr !== "undefined") {
+      return JSON.parse(userStr);
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to parse user from local storage", error);
+    return null;
+  }
+};
+
 const initialState: AuthState = {
-  user: null,
+  user: getUserFromStorage(),
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
   isLoading: false,
@@ -39,6 +53,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = null;
+      // Persist to localStorage
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
@@ -51,6 +66,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      // Clear localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
@@ -67,6 +83,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = null;
+      // Persist to localStorage
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
