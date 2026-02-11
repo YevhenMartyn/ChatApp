@@ -63,7 +63,7 @@ public sealed class RedisEventListenerService : BackgroundService
 
             _logger.LogInformation(
                 "Broadcasting message {MessageId} to conversation {ConversationId}",
-                messageSentEvent.MessageId,
+                messageSentEvent.Id,
                 messageSentEvent.ConversationId);
 
             var messageResponse = messageSentEvent.Adapt<MessageResponse>();
@@ -74,7 +74,7 @@ public sealed class RedisEventListenerService : BackgroundService
 
             _logger.LogInformation(
                 "Successfully broadcast message {MessageId}",
-                messageSentEvent.MessageId);
+                messageSentEvent.Id);
         }
         catch (JsonException ex)
         {

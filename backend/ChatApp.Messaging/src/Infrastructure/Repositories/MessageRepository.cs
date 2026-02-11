@@ -27,6 +27,7 @@ public class MessageRepository : IMessageRepository
             .OrderByDescending(m => m.SentAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
+            .Reverse()
             .ToListAsync(cancellationToken);
     }
 
