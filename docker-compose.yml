@@ -1,0 +1,80 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: chatapp-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  redis:
+    image: redis:alpine
+    container_name: chatapp-redis
+    ports:
+      - "6379:6379"
+
+  auth-service:
+    build:
+      context: ./backend/ChatApp.Auth
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppAuth;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
+      - JwtSettings__Issuer=ChatApp.Auth
+      - JwtSettings__Audience=ChatApp.Client
+    ports:
+      - "7269:8080"
+    depends_on:
+      - sqlserver
+
+  messaging-service:
+    build:
+      context: ./backend/ChatApp.Messaging
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppMessaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
+      - JwtSettings__Issuer=ChatApp.Auth
+      - JwtSettings__Audience=ChatApp.Client
+    ports:
+      - "7228:8080"
+    depends_on:
+      - sqlserver
+      - redis
+
+  realtime-service:
+    build:
+      context: ./backend/ChatApp.RealTime
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
+      - JwtSettings__Issuer=ChatApp.Auth
+      - JwtSettings__Audience=ChatApp.Client
+    ports:
+      - "7298:8080"
+    depends_on:
+      - redis
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend/ChatApp.Frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_AUTH_BASE_URL=http://localhost:7269
+        - VITE_MESSAGING_BASE_URL=http://localhost:7228
+        - VITE_REALTIME_BASE_URL=http://localhost:7298
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth-service
+      - messaging-service
+      - realtime-service
+
+volumes:
+  sql_data:

@@ -5,7 +5,6 @@ import { logout } from "../slices/authSlice";
 import { clearChat } from "../slices/chatSlice";
 import { ConversationList } from "../components/organisms/ConversationList";
 import { ChatWindow } from "../components/organisms/ChatWindow";
-import { Button } from "../components/atoms/Button";
 import { APP_ROUTES } from "../constants/routes";
 
 export const ChatPage: React.FC = () => {

@@ -28,6 +28,8 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <div className={`${sizeStyles[size]} ...`}>{getInitials(name || "?")}</div>
+    <div className={`${sizeStyles[size]} ${className} ...`}>
+      {getInitials(name || "?")}
+    </div>
   );
 };
