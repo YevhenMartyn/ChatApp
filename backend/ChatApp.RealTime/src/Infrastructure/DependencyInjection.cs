@@ -15,7 +15,11 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException("Redis connection string is not configured");
 
         services.AddSingleton<IConnectionMultiplexer>(sp =>
-            ConnectionMultiplexer.Connect(redisConnection));
+        {
+            var options = ConfigurationOptions.Parse(redisConnection!, true);
+            options.AbortOnConnectFail = false;
+            return ConnectionMultiplexer.Connect(options);
+        });
 
         services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
         services.AddHostedService<RedisEventListenerService>();

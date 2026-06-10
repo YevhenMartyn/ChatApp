@@ -16,6 +16,9 @@ RUN dotnet publish "Web.csproj" -c Release --use-current-runtime --self-containe
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 WORKDIR /app
 
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 COPY --from=build /app .
 
 EXPOSE 8080
