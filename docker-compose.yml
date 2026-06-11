@@ -44,7 +44,7 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
-    command: ["./efbundle"]
+    entrypoint: ["./efbundle"]
 
   auth-service:
     build:
@@ -67,10 +67,15 @@ services:
       context: ./backend/ChatApp.Messaging
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppMessaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
+      - JwtSettings__Issuer=ChatApp.Auth
+      - JwtSettings__Audience=ChatApp.Client
+      - MIGRATION_JOB=true
     depends_on:
       sqlserver:
         condition: service_healthy
-    command: ["./efbundle"]
+    entrypoint: ["./efbundle"]
   messaging-service:
     build:
       context: ./backend/ChatApp.Messaging
