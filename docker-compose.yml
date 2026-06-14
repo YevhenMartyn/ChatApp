@@ -110,6 +110,36 @@ services:
     depends_on:
       - redis
 
+  user-migrator:
+    build:
+      context: ./backend/ChatApp.UserDetailsService
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppUserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - MIGRATION_JOB=true
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    entrypoint: ["./efbundle"]
+
+  user-service:
+    build:
+      context: ./backend/ChatApp.UserDetailsService
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppUserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
+      - JwtSettings__Issuer=ChatApp.Auth
+      - JwtSettings__Audience=ChatApp.Client
+    ports:
+      - "5145:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      user-migrator:
+        condition: service_completed_successfully
   # Frontend
   frontend:
     build:

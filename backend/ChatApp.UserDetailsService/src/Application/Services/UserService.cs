@@ -17,7 +17,7 @@ public class UserService : IUserService
         _updateValidator = updateValidator;
     }
 
-    public async Task<UserProfileDto?> GetUserProfileAsync(Guid userId)
+    public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
     {
         var userProfile = await _userRepository.GetByIdAsync(userId);
         return userProfile?.Adapt<UserProfileDto>();
@@ -29,7 +29,7 @@ public class UserService : IUserService
         return userProfile?.Adapt<UserProfileDto>();
     }
 
-    public async Task<IEnumerable<UserProfileDto>> GetMultipleUserProfilesAsync(IEnumerable<Guid> userIds)
+    public async Task<IEnumerable<UserProfileDto>> GetMultipleUserProfilesAsync(IEnumerable<string> userIds)
     {
         var userProfiles = await _userRepository.GetMultipleByIdsAsync(userIds);
         return userProfiles.Adapt<List<UserProfileDto>>();
@@ -41,7 +41,7 @@ public class UserService : IUserService
         return users.Adapt<List<UserProfileDto>>();
     }
 
-    public async Task<UserProfileDto> UpdateUserProfileAsync(Guid userId, UpdateUserProfileRequest request)
+    public async Task<UserProfileDto> UpdateUserProfileAsync(string userId, UpdateUserProfileRequest request)
     {
         var validationResult = await _updateValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
@@ -66,7 +66,7 @@ public class UserService : IUserService
         return userProfile.Adapt<UserProfileDto>();
     }
 
-    public async Task CreateUserProfileAsync(Guid userId, string username)
+    public async Task CreateUserProfileAsync(string userId, string username)
     {
         var existingUser = await _userRepository.GetByIdAsync(userId);
         if (existingUser != null)

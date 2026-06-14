@@ -1,13 +1,12 @@
-﻿using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace ChatApp.Messaging.Infrastructure.Data;
+namespace ChatApp.UserDetailsService.Infrastructure.Data;
 
-public class MessagingDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
+public class UserDbContextFactory : IDesignTimeDbContextFactory<UserDbContext>
 {
-    public AuthDbContext CreateDbContext(string[] args)
+    public UserDbContext CreateDbContext(string[] args)
     {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,9 +21,9 @@ public class MessagingDbContextFactory : IDesignTimeDbContextFactory<AuthDbConte
             throw new InvalidOperationException("The connection string 'DefaultConnection' was not found in appsettings.json or environment variables.");
         }
 
-        var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<UserDbContext>();
         optionsBuilder.UseSqlServer(connectionString);
 
-        return new AuthDbContext(optionsBuilder.Options);
+        return new UserDbContext(optionsBuilder.Options);
     }
 }

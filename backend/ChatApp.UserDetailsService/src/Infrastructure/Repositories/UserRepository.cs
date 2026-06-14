@@ -13,7 +13,7 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<UserProfile?> GetByIdAsync(Guid id)
+    public async Task<UserProfile?> GetByIdAsync(string id)
     {
         return await _context.UserProfiles.FirstOrDefaultAsync(u => u.Id == id);
     }
@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.Username == username);
     }
 
-    public async Task<IEnumerable<UserProfile>> GetMultipleByIdsAsync(IEnumerable<Guid> ids)
+    public async Task<IEnumerable<UserProfile>> GetMultipleByIdsAsync(IEnumerable<string> ids)
     {
         var idList = ids.ToList();
         return await _context.UserProfiles
@@ -53,7 +53,7 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(string id)
     {
         var user = await _context.UserProfiles.FirstOrDefaultAsync(u => u.Id == id);
         if (user != null)

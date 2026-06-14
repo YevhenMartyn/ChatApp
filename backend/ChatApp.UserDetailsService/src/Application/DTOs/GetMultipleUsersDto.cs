@@ -2,5 +2,5 @@
 
 public class GetMultipleUsersRequest
 {
-    public IEnumerable<Guid> Ids { get; set; } = new List<Guid>();
+    public IEnumerable<string> Ids { get; set; } = new List<string>();
 }

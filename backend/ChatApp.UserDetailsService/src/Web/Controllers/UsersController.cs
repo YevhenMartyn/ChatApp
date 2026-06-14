@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserProfileDto>> GetUserById(Guid id)
+    public async Task<ActionResult<UserProfileDto>> GetUserById(string id)
     {
         var userProfile = await _userService.GetUserProfileAsync(id);
         if (userProfile == null)
@@ -84,11 +84,13 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserProfileDto>> UpdateMyProfile(UpdateUserProfileRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        if (userIdClaim == null || string.IsNullOrWhiteSpace(userIdClaim.Value))
         {
             _logger.LogWarning("Invalid user ID in token");
             return Unauthorized(new { message = "Invalid authentication token." });
         }
+
+        var userId = userIdClaim.Value;
 
         try
         {
