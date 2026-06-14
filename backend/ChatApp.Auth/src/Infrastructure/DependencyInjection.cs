@@ -7,10 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Application.Interfaces;
-using Application.Services;
 using Domain.Settings;
 using Infrastructure.Data;
 using Infrastructure.Services;
+using StackExchange.Redis;
 
 namespace Infrastructure;
 
@@ -58,6 +58,9 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        var redisConnection = configuration.GetConnectionString("Redis");
+        services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnection!));
 
         return services;
     }

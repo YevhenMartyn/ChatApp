@@ -19,9 +19,7 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// Get a specific user's profile by ID
-    /// </summary>
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserProfileDto>> GetUserById(Guid id)
     {
@@ -35,9 +33,7 @@ public class UsersController : ControllerBase
         return Ok(userProfile);
     }
 
-    /// <summary>
-    /// Get a specific user's profile by username
-    /// </summary>
+    [Authorize]
     [HttpGet("by-username/{username}")]
     public async Task<ActionResult<UserProfileDto>> GetUserByUsername(string username)
     {
@@ -56,9 +52,7 @@ public class UsersController : ControllerBase
         return Ok(userProfile);
     }
 
-    /// <summary>
-    /// Get multiple users by their IDs
-    /// </summary>
+    [Authorize]
     [HttpPost("by-ids")]
     public async Task<ActionResult<IEnumerable<UserProfileDto>>> GetMultipleUsersById([FromBody] GetMultipleUsersRequest request)
     {
@@ -71,9 +65,7 @@ public class UsersController : ControllerBase
         return Ok(userProfiles);
     }
 
-    /// <summary>
-    /// Search for users by display name
-    /// </summary>
+    [Authorize]
     [HttpGet("search")]
     public async Task<ActionResult<IEnumerable<UserProfileDto>>> SearchUsers([FromQuery] string query)
     {
@@ -86,9 +78,7 @@ public class UsersController : ControllerBase
         return Ok(results);
     }
 
-    /// <summary>
-    /// Update the currently authenticated user's profile
-    /// </summary>
+
     [Authorize]
     [HttpPut("me")]
     public async Task<ActionResult<UserProfileDto>> UpdateMyProfile(UpdateUserProfileRequest request)

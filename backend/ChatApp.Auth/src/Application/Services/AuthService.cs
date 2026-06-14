@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Application.Interfaces;
 using Domain.Settings;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace Application.Services;
 
@@ -13,15 +15,19 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly JwtSettings _jwtSettings;
+    private readonly IConnectionMultiplexer _redis;
 
+    // Inject IConnectionMultiplexer here
     public AuthService(
         UserManager<ApplicationUser> userManager,
         IJwtTokenGenerator jwtTokenGenerator,
-        IOptions<JwtSettings> jwtSettings)
+        IOptions<JwtSettings> jwtSettings,
+        IConnectionMultiplexer redis)
     {
         _userManager = userManager;
         _jwtTokenGenerator = jwtTokenGenerator;
         _jwtSettings = jwtSettings.Value;
+        _redis = redis;
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
@@ -46,6 +52,20 @@ public class AuthService : IAuthService
         }
 
         await _userManager.AddToRoleAsync(user, RoleConstants.User);
+
+        // ==========================================
+        // NEW: Publish event to Redis
+        // ==========================================
+        var publisher = _redis.GetSubscriber();
+        var userEvent = new
+        {
+            UserId = user.Id,
+            Username = user.UserName,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await publisher.PublishAsync("user-registered", JsonSerializer.Serialize(userEvent));
+        // ==========================================
 
         var token = await _jwtTokenGenerator.GenerateTokenAsync(user);
 
@@ -87,7 +107,7 @@ public class AuthService : IAuthService
             return false;
 
         var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-        
+
         try
         {
             var key = System.Text.Encoding.UTF8.GetBytes(_jwtSettings.Secret);
@@ -102,7 +122,7 @@ public class AuthService : IAuthService
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             }, out _);
-            
+
             return true;
         }
         catch
