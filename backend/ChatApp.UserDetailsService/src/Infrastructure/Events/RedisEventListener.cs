@@ -1,5 +1,6 @@
 ﻿using ChatApp.UserDetailsService.Application.Services;
 using ChatApp.UserDetailsService.Domain.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -10,17 +11,17 @@ namespace ChatApp.UserDetailsService.Infrastructure.Events;
 public class RedisEventListener : IHostedService
 {
     private readonly IConnectionMultiplexer _redis;
-    private readonly IUserService _userService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<RedisEventListener> _logger;
     private ISubscriber? _subscriber;
 
     public RedisEventListener(
         IConnectionMultiplexer redis,
-        IUserService userService,
+        IServiceScopeFactory scopeFactory,
         ILogger<RedisEventListener> logger)
     {
         _redis = redis;
-        _userService = userService;
+        _scopeFactory = scopeFactory;
         _logger = logger;
     }
 
@@ -44,8 +45,10 @@ public class RedisEventListener : IHostedService
                     _logger.LogWarning("Failed to deserialize UserRegisteredEvent");
                     return;
                 }
+                using var scope = _scopeFactory.CreateScope();
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
-                await _userService.CreateUserProfileAsync(eventData.UserId, eventData.Username);
+                await userService.CreateUserProfileAsync(eventData.UserId, eventData.Username);
                 _logger.LogInformation(
                     "User profile created for userId: {UserId}, username: {Username}",
                     eventData.UserId,
