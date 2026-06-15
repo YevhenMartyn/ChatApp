@@ -27,6 +27,10 @@ export interface SendMessageRequest {
   content: string;
 }
 
+export interface StartConversationRequest {
+  otherUserId: string;
+}
+
 export const chatService = {
   getConversations: async (): Promise<Conversation[]> => {
     const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
@@ -75,5 +79,29 @@ export const chatService = {
     );
 
     return response.data;
+  },
+
+  startConversation: async (
+    request: StartConversationRequest,
+  ): Promise<Conversation> => {
+    const response = await messagingAxios.post<BackendConversation>(
+      API_ROUTES.CHAT.START_CONVERSATION,
+      request,
+    );
+
+    const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const currentUserId = currentUser.id;
+    const otherUserId =
+      response.data.participantIds.find((id: string) => id !== currentUserId) ||
+      "Unknown";
+
+    return {
+      id: response.data.id,
+      name: `Chat ${otherUserId.substring(0, 8)}`,
+      createdAt: response.data.createdAt,
+      lastMessageAt: response.data.lastMessageAt,
+      participantIds: response.data.participantIds,
+      lastMessage: response.data.lastMessage,
+    };
   },
 };

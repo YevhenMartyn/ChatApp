@@ -5,6 +5,8 @@ import { logout } from "../slices/authSlice";
 import { clearChat } from "../slices/chatSlice";
 import { ConversationList } from "../components/organisms/ConversationList";
 import { ChatWindow } from "../components/organisms/ChatWindow";
+import { UserSearch } from "../components/organisms/UserSearch";
+import { UserProfileView } from "../components/organisms/UserProfileView";
 import { APP_ROUTES } from "../constants/routes";
 
 export const ChatPage: React.FC = () => {
@@ -41,8 +43,11 @@ export const ChatPage: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <div className="w-80 flex-shrink-0">
-          <ConversationList />
+        <div className="w-80 flex-shrink-0 flex flex-col border-r">
+          <UserSearch />
+          <div className="flex-1 overflow-hidden">
+            <ConversationList />
+          </div>
         </div>
 
         {/* Chat Area */}
@@ -50,6 +55,9 @@ export const ChatPage: React.FC = () => {
           <ChatWindow />
         </div>
       </div>
+
+      {/* Profile View Modal */}
+      <UserProfileView />
     </div>
   );
 };

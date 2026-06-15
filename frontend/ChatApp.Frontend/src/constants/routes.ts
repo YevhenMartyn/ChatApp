@@ -3,6 +3,8 @@ export const AUTH_BASE_URL =
   import.meta.env.VITE_AUTH_BASE_URL || "https://localhost:7269";
 export const MESSAGING_BASE_URL =
   import.meta.env.VITE_MESSAGING_BASE_URL || "https://localhost:7228";
+export const USER_BASE_URL =
+  import.meta.env.VITE_USER_BASE_URL || "http://localhost:5145";
 export const REALTIME_BASE_URL =
   import.meta.env.VITE_REALTIME_BASE_URL || "https://localhost:7298";
 
@@ -17,6 +19,12 @@ export const API_ROUTES = {
     MESSAGES: (conversationId: string) =>
       `/api/messages/conversation/${conversationId}`,
     SEND_MESSAGE: "/api/messages",
+    START_CONVERSATION: "/api/conversations",
+  },
+  USERS: {
+    SEARCH: (query: string) => `/api/Users/search?query=${query}`,
+    GET_PROFILE: (id: string) => `/api/Users/${id}`,
+    UPDATE_PROFILE: "/api/Users/me",
   },
 };
 

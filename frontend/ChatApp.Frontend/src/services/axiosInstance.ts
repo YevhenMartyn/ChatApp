@@ -1,5 +1,9 @@
 import axios from "axios";
-import { AUTH_BASE_URL, MESSAGING_BASE_URL } from "../constants/routes";
+import {
+  AUTH_BASE_URL,
+  MESSAGING_BASE_URL,
+  USER_BASE_URL,
+} from "../constants/routes";
 
 // Axios instance for Auth service
 export const authAxios = axios.create({
@@ -12,6 +16,14 @@ export const authAxios = axios.create({
 // Axios instance for Messaging service
 export const messagingAxios = axios.create({
   baseURL: MESSAGING_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Axios instance for User service
+export const userAxios = axios.create({
+  baseURL: USER_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -38,6 +50,7 @@ messagingAxios.interceptors.request.use(
   requestInterceptor,
   requestErrorInterceptor,
 );
+userAxios.interceptors.request.use(requestInterceptor, requestErrorInterceptor);
 
 // Response interceptor to handle errors for both instances
 const responseInterceptor = (response: any) => response;
@@ -57,6 +70,10 @@ authAxios.interceptors.response.use(
   responseErrorInterceptor,
 );
 messagingAxios.interceptors.response.use(
+  responseInterceptor,
+  responseErrorInterceptor,
+);
+userAxios.interceptors.response.use(
   responseInterceptor,
   responseErrorInterceptor,
 );
