@@ -12,10 +12,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
 
-        // Validators
         services.AddValidatorsFromAssemblyContaining<UpdateUserProfileValidator>();
 
-        // Mapster configuration
         TypeAdapterConfig.GlobalSettings.Scan(typeof(DependencyInjection).Assembly);
 
         return services;
