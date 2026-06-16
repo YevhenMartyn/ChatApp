@@ -42,8 +42,10 @@ export const ConversationList: React.FC = () => {
     const missingUserIds = Array.from(
       new Set(
         conversations
-          .flatMap((c) => c.participantIds)
-          .filter((id) => id !== currentUser?.id && !participantProfiles[id]),
+          .flatMap((c) => c.participantIds || [])
+          .filter(
+            (id) => id && id !== currentUser?.id && !participantProfiles[id],
+          ),
       ),
     );
 
@@ -84,9 +86,10 @@ export const ConversationList: React.FC = () => {
       ) : (
         <div className="divide-y divide-gray-200">
           {conversations.map((conversation) => {
-            const otherUserId = conversation.participantIds.find(
+            const otherUserId = conversation.participantIds?.find(
               (id) => id !== currentUser?.id,
             );
+
             const profile = otherUserId
               ? participantProfiles[otherUserId]
               : null;

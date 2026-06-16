@@ -66,11 +66,17 @@ const chatSlice = createSlice({
       state.messages[conversationId].push(action.payload);
     },
     addConversation: (state, action: PayloadAction<Conversation>) => {
+      if (!action.payload || !action.payload.id) {
+        console.error("Attempted to add invalid conversation:", action.payload);
+        return;
+      }
+
       const exists = state.conversations.some(
         (c) => c.id === action.payload.id,
       );
+
       if (!exists) {
-        state.conversations.unshift(action.payload);
+        state.conversations = [action.payload, ...state.conversations];
       }
     },
     messageReceived: (state, action: PayloadAction<Message>) => {
