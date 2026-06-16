@@ -8,11 +8,24 @@ import { ChatWindow } from "../components/organisms/ChatWindow";
 import { UserSearch } from "../components/organisms/UserSearch";
 import { UserProfileView } from "../components/organisms/UserProfileView";
 import { APP_ROUTES } from "../constants/routes";
+import { setViewedProfile } from "../slices/userSlice";
+import { userService } from "../services/userService";
 
 export const ChatPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
+
+  const handleOpenMyProfile = async () => {
+    if (user?.id) {
+      try {
+        const profile = await userService.getUserProfile(user.id);
+        dispatch(setViewedProfile(profile));
+      } catch (error) {
+        console.error("Failed to fetch my profile", error);
+      }
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -30,6 +43,12 @@ export const ChatPage: React.FC = () => {
             <span className="text-sm text-white">
               Welcome, {user?.username}
             </span>
+            <button
+              onClick={handleOpenMyProfile}
+              className="px-4 py-2 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors mr-2"
+            >
+              My Profile
+            </button>
             <button
               onClick={handleLogout}
               className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-medium transition-colors"

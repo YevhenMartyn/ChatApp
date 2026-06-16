@@ -66,4 +66,18 @@ export const userService = {
       throw error;
     }
   },
+
+  getMultipleUserProfiles: async (ids: string[]): Promise<UserProfile[]> => {
+    if (ids.length === 0) return [];
+    try {
+      const response = await userAxios.post<UserProfile[]>(
+        `${API_ROUTES.USERS.UPDATE_PROFILE.replace("/me", "")}/by-ids`,
+        { ids },
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching multiple profiles:", error);
+      return [];
+    }
+  },
 };

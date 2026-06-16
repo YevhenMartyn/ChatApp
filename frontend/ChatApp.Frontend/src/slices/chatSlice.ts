@@ -65,6 +65,14 @@ const chatSlice = createSlice({
       }
       state.messages[conversationId].push(action.payload);
     },
+    addConversation: (state, action: PayloadAction<Conversation>) => {
+      const exists = state.conversations.some(
+        (c) => c.id === action.payload.id,
+      );
+      if (!exists) {
+        state.conversations.unshift(action.payload);
+      }
+    },
     messageReceived: (state, action: PayloadAction<Message>) => {
       const { conversationId } = action.payload;
       if (!state.messages[conversationId]) {
@@ -103,6 +111,7 @@ export const {
   setActiveConversation,
   setMessages,
   addMessage,
+  addConversation,
   messageReceived,
   setLoadingConversations,
   setLoadingMessages,

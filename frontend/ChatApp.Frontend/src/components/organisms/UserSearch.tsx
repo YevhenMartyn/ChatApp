@@ -12,6 +12,7 @@ import {
 import {
   setActiveConversation,
   setLoadingConversations,
+  addConversation,
 } from "../../slices/chatSlice";
 import { userService } from "../../services/userService";
 import { chatService } from "../../services/chatService";
@@ -82,7 +83,10 @@ export const UserSearch: React.FC = () => {
         const conversation = await chatService.startConversation({
           otherUserId: userId,
         });
+
+        dispatch(addConversation(conversation));
         dispatch(setActiveConversation(conversation.id));
+
         setSearchQuery("");
         dispatch(clearSearchResults());
         setShowResults(false);
@@ -100,7 +104,6 @@ export const UserSearch: React.FC = () => {
     [dispatch, currentUser?.id],
   );
 
-  // Close results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
