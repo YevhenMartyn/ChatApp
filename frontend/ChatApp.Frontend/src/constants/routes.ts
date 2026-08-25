@@ -1,8 +1,5 @@
 // Backend service URLs
-export const AUTH_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
-export const MESSAGING_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
-export const USER_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
-export const REALTIME_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+export const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export const API_ROUTES = {
   AUTH: {
@@ -31,4 +28,4 @@ export const APP_ROUTES = {
   ROOT: "/",
 };
 
-export const SIGNALR_HUB_URL = `${REALTIME_BASE_URL}/hubs/chat`;
+export const SIGNALR_HUB_URL = `${BACKEND_BASE_URL}/hubs/chat`;

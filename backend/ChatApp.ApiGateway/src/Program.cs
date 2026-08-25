@@ -1,18 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+var frontendUrl = builder.Configuration["FrontendUrl"]
+    ?? throw new InvalidOperationException("FrontendUrl is missing in configuration.");
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("GatewayCorsPolicy", policy =>
     {
-        policy.WithOrigins(builder.Configuration["FrontendUrl"] ?? "http://localhost:5173")
-              .AllowAnyHeader()
+        policy.WithOrigins(frontendUrl)
               .AllowAnyMethod()
+              .AllowAnyHeader()
               .AllowCredentials();
     });
 });
+
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
