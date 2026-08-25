@@ -32,6 +32,17 @@ services:
     ports:
       - "6379:6379"
 
+  gateway-service:
+    build:
+      context: ./backend/ChatApp.ApiGateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - messaging-service
+      - realtime-service
+      - user-service
+
   auth-migrator:
     build:
       context: ./backend/ChatApp.Auth
@@ -57,13 +68,12 @@ services:
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
       - JwtSettings__Audience=ChatApp.Client
-    ports:
-      - "7269:8080"
     depends_on:
       sqlserver:
         condition: service_healthy
       auth-migrator:
         condition: service_completed_successfully
+
   messaging-migrator:
     build:
       context: ./backend/ChatApp.Messaging
@@ -78,6 +88,7 @@ services:
       sqlserver:
         condition: service_healthy
     entrypoint: ["./efbundle"]
+
   messaging-service:
     build:
       context: ./backend/ChatApp.Messaging
@@ -88,8 +99,6 @@ services:
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
       - JwtSettings__Audience=ChatApp.Client
-    ports:
-      - "7228:8080"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -107,8 +116,6 @@ services:
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
       - JwtSettings__Audience=ChatApp.Client
-    ports:
-      - "7298:8080"
     depends_on:
       - redis
 
@@ -133,8 +140,6 @@ services:
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
       - JwtSettings__Audience=ChatApp.Client
-    ports:
-      - "5145:8080"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -142,21 +147,17 @@ services:
         condition: service_started
       user-migrator:
         condition: service_completed_successfully
-  # Frontend
+
   frontend:
     build:
       context: ./frontend/ChatApp.Frontend
       dockerfile: Dockerfile
       args:
-        - VITE_AUTH_BASE_URL=http://localhost:7269
-        - VITE_MESSAGING_BASE_URL=http://localhost:7228
-        - VITE_REALTIME_BASE_URL=http://localhost:7298
+        - VITE_BACKEND_BASE_URL=http://localhost:8080
     ports:
       - "5173:80"
     depends_on:
-      - auth-service
-      - messaging-service
-      - realtime-service
+      - gateway-service
 
 volumes:
   sql_data:
