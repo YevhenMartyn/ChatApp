@@ -24,7 +24,6 @@ export const UserProfileView: React.FC = () => {
 
   const isOwnProfile = viewedProfile?.id === currentUser?.id;
 
-  // Initialize form data when viewing profile
   useEffect(() => {
     if (viewedProfile) {
       setFormData({

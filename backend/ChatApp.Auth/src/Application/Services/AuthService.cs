@@ -17,7 +17,6 @@ public class AuthService : IAuthService
     private readonly JwtSettings _jwtSettings;
     private readonly IConnectionMultiplexer _redis;
 
-    // Inject IConnectionMultiplexer here
     public AuthService(
         UserManager<ApplicationUser> userManager,
         IJwtTokenGenerator jwtTokenGenerator,
@@ -53,9 +52,6 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRoleAsync(user, RoleConstants.User);
 
-        // ==========================================
-        // NEW: Publish event to Redis
-        // ==========================================
         var publisher = _redis.GetSubscriber();
         var userEvent = new
         {
@@ -65,7 +61,6 @@ public class AuthService : IAuthService
         };
 
         await publisher.PublishAsync("user-registered", JsonSerializer.Serialize(userEvent));
-        // ==========================================
 
         var token = await _jwtTokenGenerator.GenerateTokenAsync(user);
 

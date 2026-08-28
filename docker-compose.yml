@@ -47,7 +47,7 @@ services:
     build:
       context: ./backend/ChatApp.Auth
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppAuth;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.Auth;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
@@ -63,7 +63,7 @@ services:
       context: ./backend/ChatApp.Auth
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppAuth;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.Auth;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
@@ -78,7 +78,7 @@ services:
     build:
       context: ./backend/ChatApp.Messaging
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppMessaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.Messaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
@@ -94,7 +94,7 @@ services:
       context: ./backend/ChatApp.Messaging
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppMessaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.Messaging;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth
@@ -121,9 +121,9 @@ services:
 
   user-migrator:
     build:
-      context: ./backend/ChatApp.UserDetailsService
+      context: ./backend/ChatApp.UserDetails
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppUserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.UserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - MIGRATION_JOB=true
     depends_on:
       sqlserver:
@@ -132,10 +132,10 @@ services:
 
   user-service:
     build:
-      context: ./backend/ChatApp.UserDetailsService
+      context: ./backend/ChatApp.UserDetails
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatAppUserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ChatApp.UserDetails;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__Redis=redis:6379
       - JwtSettings__Secret=your-super-secret-key-at-least-32-characters-long!
       - JwtSettings__Issuer=ChatApp.Auth

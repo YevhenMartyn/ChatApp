@@ -1,7 +1,6 @@
 import { userAxios } from "./axiosInstance";
 import { API_ROUTES } from "../constants/routes";
 
-// User Profile interfaces
 export interface UserProfile {
   id: string;
   username: string;
@@ -16,7 +15,6 @@ export interface UpdateUserProfileRequest {
   avatar?: string;
 }
 
-// Search result
 export interface UserSearchResult {
   id: string;
   username: string;

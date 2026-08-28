@@ -1,7 +1,6 @@
 import axios from "axios";
 import { BACKEND_BASE_URL } from "../constants/routes";
 
-// Axios instance for Auth service
 export const authAxios = axios.create({
   baseURL: BACKEND_BASE_URL,
   headers: {
@@ -9,7 +8,6 @@ export const authAxios = axios.create({
   },
 });
 
-// Axios instance for Messaging service
 export const messagingAxios = axios.create({
   baseURL: BACKEND_BASE_URL,
   headers: {
@@ -17,7 +15,6 @@ export const messagingAxios = axios.create({
   },
 });
 
-// Axios instance for User service
 export const userAxios = axios.create({
   baseURL: BACKEND_BASE_URL,
   headers: {
@@ -25,10 +22,8 @@ export const userAxios = axios.create({
   },
 });
 
-// Default instance (for backwards compatibility)
 const axiosInstance = authAxios;
 
-// Request interceptor to add JWT token to both instances
 const requestInterceptor = (config: any) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -48,12 +43,10 @@ messagingAxios.interceptors.request.use(
 );
 userAxios.interceptors.request.use(requestInterceptor, requestErrorInterceptor);
 
-// Response interceptor to handle errors for both instances
 const responseInterceptor = (response: any) => response;
 
 const responseErrorInterceptor = (error: any) => {
   if (error.response?.status === 401) {
-    // Token expired or invalid
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/login";

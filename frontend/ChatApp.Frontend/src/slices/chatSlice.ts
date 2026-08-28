@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-// Backend Message contract
 export interface Message {
   id: string;
   conversationId: string;
@@ -9,10 +8,9 @@ export interface Message {
   sentAt: string;
 }
 
-// Backend Conversation contract
 export interface Conversation {
   id: string;
-  name?: string; // Generated on frontend from participantIds
+  name?: string;
   createdAt: string;
   lastMessageAt?: string;
   participantIds: string[];
@@ -84,7 +82,6 @@ const chatSlice = createSlice({
       if (!state.messages[conversationId]) {
         state.messages[conversationId] = [];
       }
-      // Avoid duplicates
       const exists = state.messages[conversationId].some(
         (m) => m.id === action.payload.id,
       );

@@ -2,7 +2,6 @@ import { messagingAxios } from "./axiosInstance";
 import { API_ROUTES } from "../constants/routes";
 import type { Conversation, Message } from "../slices/chatSlice";
 
-// Backend response interfaces
 interface BackendConversation {
   id: string;
   createdAt: string;
@@ -40,7 +39,6 @@ export const chatService = {
       API_ROUTES.CHAT.CONVERSATIONS,
     );
 
-    // Map backend response to frontend Conversation interface
     return response.data.map((c) => {
       const otherUserId =
         c.participantIds.find((id: string) => id !== currentUserId) ||
@@ -62,7 +60,6 @@ export const chatService = {
       API_ROUTES.CHAT.MESSAGES(conversationId),
     );
 
-    // Backend already returns the correct format
     return response.data;
   },
 

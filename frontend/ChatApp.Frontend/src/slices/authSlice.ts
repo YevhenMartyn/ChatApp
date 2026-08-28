@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-// 1. Updated User interface (String ID, No Email)
 export interface User {
   id: string;
   username: string;
@@ -14,7 +13,6 @@ interface AuthState {
   error: string | null;
 }
 
-// 2. Helper to safely load user from localStorage
 const getUserFromStorage = (): User | null => {
   try {
     const userStr = localStorage.getItem("user");
@@ -53,7 +51,6 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = null;
-      // Persist to localStorage
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
@@ -66,7 +63,6 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      // Clear localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
@@ -83,7 +79,6 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = null;
-      // Persist to localStorage
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
