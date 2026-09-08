@@ -19,7 +19,7 @@ RUN dotnet ef migrations bundle \
     --startup-project src/Web/Web.csproj \
     --output /app/efbundle \
     --self-contained \
-    -r linux-musl-x64
+    -r linux-x64
 
 WORKDIR /source/src/Web
 RUN dotnet publish "Web.csproj" -c Release --use-current-runtime --self-contained false -o /app
